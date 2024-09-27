@@ -21,6 +21,10 @@ public class CustomHeaderFilter implements Filter {
                 "Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
         );
         httpResponse.addHeader(
+                "Access-Control-Allow-Credentials",
+                "true"
+        );
+        httpResponse.addHeader(
                 "Access-Control-Allow-Methods",
                 "GET, POST, PUT, DELETE, OPTIONS, HEAD"
         );
