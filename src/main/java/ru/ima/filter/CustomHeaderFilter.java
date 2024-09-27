@@ -20,6 +20,10 @@ public class CustomHeaderFilter implements Filter {
                 "Access-Control-Request-Headers",
                 "Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
         );
+        httpResponse.addHeader(
+                "Access-Control-Allow-Methods",
+                "GET, POST, PUT, DELETE, OPTIONS, HEAD"
+        );
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }
