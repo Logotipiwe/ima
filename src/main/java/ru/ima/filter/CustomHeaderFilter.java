@@ -18,7 +18,7 @@ public class CustomHeaderFilter implements Filter {
                 "http://localhost:5173");
         httpResponse.addHeader(
                 "Access-Control-Request-Headers",
-                "*"
+                "Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization"
         );
         filterChain.doFilter(servletRequest, servletResponse);
     }
