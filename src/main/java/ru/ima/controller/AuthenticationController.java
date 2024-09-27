@@ -3,7 +3,7 @@ package ru.ima.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.ima.model.User;
+import ru.ima.model.jpa.User;
 import ru.ima.model.dto.LoginResponse;
 import ru.ima.model.dto.LoginUserDto;
 import ru.ima.model.dto.RegisterUserDto;

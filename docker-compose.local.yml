@@ -12,12 +12,14 @@ services:
   ima:
     container_name: ima
     build: .
+    env_file:
+      - .env.local
     restart: always
     environment:
       DB_HOST: pg
       DB_USER: postgres
       DB_NAME: postgres
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASSWORD: 1234
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     networks:
       - dc-net
