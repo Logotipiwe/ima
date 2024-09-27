@@ -19,7 +19,7 @@ jobs:
     - name: Checkout project
       uses: actions/checkout@v3
       with:
-        repository: Logotipiwe/ai_rofl_bot
+        repository: Logotipiwe/ima
         token: ${{secrets.PAT}}
 
     - name: Login to Docker Hub
