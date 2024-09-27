@@ -11,7 +11,7 @@ import ru.ima.service.AuthenticationService;
 import ru.ima.service.JwtService;
 
 @CrossOrigin(origins = "http://localhost:8080")
-@RequestMapping("/auth")
+@RequestMapping("/ima/auth")
 @RestController
 public class AuthenticationController {
 
