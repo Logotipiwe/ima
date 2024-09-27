@@ -16,6 +16,10 @@ public class CustomHeaderFilter implements Filter {
         httpResponse.addHeader(
                 "Access-Control-Allow-Origin",
                 "http://localhost:5173");
+        httpResponse.addHeader(
+                "Access-Control-Request-Headers",
+                "*"
+        );
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }
