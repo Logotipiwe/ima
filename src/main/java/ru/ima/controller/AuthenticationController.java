@@ -10,7 +10,6 @@ import ru.ima.model.dto.RegisterUserDto;
 import ru.ima.service.AuthenticationService;
 import ru.ima.service.JwtService;
 
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/ima/auth")
 @RestController
 public class AuthenticationController {

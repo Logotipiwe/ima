@@ -9,5 +9,22 @@ services:
       - db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: 1234
+  ima:
+    container_name: ima
+    build: .
+    restart: always
+    environment:
+      DB_HOST: pg
+      DB_USER: postgres
+      DB_NAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    networks:
+      - dc-net
+
+networks:
+  dc-net:
+    external: true
+
 volumes:
   db_data:
