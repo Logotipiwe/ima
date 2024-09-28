@@ -1,8 +1,10 @@
 package ru.ima.model.jpa;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,5 +17,8 @@ public class Team {
 
     @Column(unique = true, nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "teamId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserTeam> userTeams;
 
 }

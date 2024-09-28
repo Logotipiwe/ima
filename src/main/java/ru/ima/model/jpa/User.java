@@ -1,7 +1,10 @@
 package ru.ima.model.jpa;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +16,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
 
@@ -27,6 +31,7 @@ public class User implements UserDetails {
     @Column(unique = true, length = 100, nullable = false)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
@@ -37,16 +42,6 @@ public class User implements UserDetails {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "team_id", insertable = false, updatable = false)
-    private Team team;
-
-    @Column(name = "team_id")
-    private UUID teamId;
-
-    public User() {
-    }
 
     public User(String fullName, String email, String password) {
         this.fullName = fullName;
@@ -59,10 +54,10 @@ public class User implements UserDetails {
         return List.of();
     }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+//    @Override
+//    public String getPassword() {
+//        return password;
+//    }
 
     @Override
     public String getUsername() {

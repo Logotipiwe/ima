@@ -10,6 +10,7 @@ import java.util.UUID;
 @Data
 public class UserTeam {
     @Id
+    @JsonIgnore
     @GeneratedValue
     private UUID id;
 
