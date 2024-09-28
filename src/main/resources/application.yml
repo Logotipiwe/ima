@@ -32,3 +32,8 @@ security:
     expiration-time: 3600000
 ima:
   mail-verification: false
+
+springdoc:
+  swagger-ui:
+    path: /ima/swagger-ui
+    disable-swagger-default-url: true
