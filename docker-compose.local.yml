@@ -9,6 +9,12 @@ services:
       - db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: 1234
+  jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+      - "8082:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
   ima:
     container_name: ima
     build: .
@@ -30,3 +36,4 @@ networks:
 
 volumes:
   db_data:
+  jenkins_home:
