@@ -1,13 +1,13 @@
-CREATE TABLE user_team
+CREATE TABLE user_project
 (
     id      UUID NOT NULL,
-    team_id UUID,
+    project_id UUID,
     user_id INTEGER,
-    CONSTRAINT pk_userteam PRIMARY KEY (id)
+    CONSTRAINT pk_userproject PRIMARY KEY (id)
 );
 
-ALTER TABLE user_team
-    ADD CONSTRAINT FK_USERTEAM_ON_TEAM FOREIGN KEY (team_id) REFERENCES team (id);
+ALTER TABLE user_project
+    ADD CONSTRAINT FK_USERPROJECT_ON_PROJECT FOREIGN KEY (project_id) REFERENCES project (id);
 
-ALTER TABLE user_team
-    ADD CONSTRAINT FK_USERTEAM_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE user_project
+    ADD CONSTRAINT FK_USERPROJECT_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);

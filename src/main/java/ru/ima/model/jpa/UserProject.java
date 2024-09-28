@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-public class UserTeam {
+public class UserProject {
     @Id
     @JsonIgnore
     @GeneratedValue
@@ -16,11 +16,11 @@ public class UserTeam {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "team_id", insertable = false, updatable = false)
-    private Team team;
+    @JoinColumn(name = "project_id", insertable = false, updatable = false)
+    private Project project;
 
-    @Column(name = "team_id")
-    private UUID teamId;
+    @Column(name = "project_id")
+    private UUID projectId;
 
     @ManyToOne
     @JsonIgnore
