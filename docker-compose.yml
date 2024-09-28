@@ -10,6 +10,7 @@ services:
       DB_NAME: postgres
       DB_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
     networks:
       - dc-net
 

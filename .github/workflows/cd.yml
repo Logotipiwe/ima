@@ -56,6 +56,7 @@ jobs:
           export IMAGE=${{ env.IMAGE }}
           export DB_PASSWORD=${{ env.DB_PASS }}
           export JWT_SECRET_KEY=${{ env.JWT_SECRET_KEY }}
+          export MAIL_PASSWORD=${{ env.MAIL_PASSWORD }}
           
           docker-compose -f /kuber/ima/docker-compose.yml down --remove-orphans
           docker-compose -f /kuber/ima/docker-compose.yml up -d
