@@ -2,7 +2,6 @@ package ru.ima.model.jpa;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,10 +42,15 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    public User(String fullName, String email, String password) {
+    private UUID confirmationCode;
+
+    private Boolean verified = false;
+
+    public User(String fullName, String email, String password, UUID confirmationCode) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
+        this.confirmationCode = confirmationCode;
     }
 
     @Override

@@ -1,4 +1,15 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: logotipishe@gmail.com
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   application:
     name: ima
   datasource:
@@ -20,3 +31,4 @@ security:
     secret-key: ${JWT_SECRET_KEY}
     expiration-time: 3600000
 ima:
+  mail-verification: false
