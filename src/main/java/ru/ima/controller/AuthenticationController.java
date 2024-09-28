@@ -66,6 +66,8 @@ public class AuthenticationController {
         Cookie cookie = new Cookie(AuthenticationService.AUTH_COOKIE_NAME, loginResponse.getToken());
         cookie.setPath("/");
         cookie.setHttpOnly(false);
+        cookie.setSecure(true);
+        cookie.setAttribute("SameSite", "None");
         response.addCookie(cookie);
         return ResponseEntity.ok(loginResponse);
     }
