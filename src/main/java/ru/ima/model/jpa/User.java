@@ -42,6 +42,7 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @JsonIgnore
     private UUID confirmationCode;
 
     private Boolean verified = false;

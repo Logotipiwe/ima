@@ -63,7 +63,10 @@ public class AuthenticationController {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
         LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
-        response.addCookie(new Cookie(AuthenticationService.AUTH_COOKIE_NAME, loginResponse.getToken()));
+        Cookie cookie = new Cookie(AuthenticationService.AUTH_COOKIE_NAME, loginResponse.getToken());
+        cookie.setPath("/");
+        cookie.setHttpOnly(false);
+        response.addCookie(cookie);
         return ResponseEntity.ok(loginResponse);
     }
 }
