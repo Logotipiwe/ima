@@ -10,6 +10,8 @@ import ru.ima.repo.TeamRepo;
 import ru.ima.repo.UserRepo;
 import ru.ima.repo.UserTeamRepo;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/ima/api/teams")
 public class TeamsController {
@@ -40,7 +42,26 @@ public class TeamsController {
     }
 
     @GetMapping
-    public ResponseEntity getAll() {
-        return ResponseEntity.ok(teamRepo.findAll());
+    public ResponseEntity getMyTeams(
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(teamRepo.findMy(user.getId()));
+    }
+
+    @PostMapping("/{teamId}/invite/{inviteeId}")
+    public ResponseEntity inviteUser(
+        @AuthenticationPrincipal User user,
+        @PathVariable("teamId") UUID teamId,
+        @PathVariable("inviteeId") Integer inviteeId
+    ){
+        if(!teamRepo.isUserInTeam(user.getId(), teamId)) {
+            throw new RuntimeException("You are not in this team");
+        }
+
+        UserTeam userTeam = new UserTeam();
+        userTeam.setTeamId(teamId);
+        userTeam.setUserId(inviteeId);
+        userTeamRepo.save(userTeam);
+        return ResponseEntity.ok(userTeam);
     }
 }
