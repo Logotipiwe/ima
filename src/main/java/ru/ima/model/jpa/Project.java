@@ -21,4 +21,7 @@ public class Project {
 
     private Integer gitlabId;
     private String gitlabLink;
+
+    private Long githubId;
+    private String githubLink;
 }

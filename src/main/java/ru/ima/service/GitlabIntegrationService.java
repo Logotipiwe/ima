@@ -38,7 +38,7 @@ public class GitlabIntegrationService {
     public List<Project> integrateProjectsAndIssues(User user) throws IOException {
         GitlabAPI connect = this.createApi(user);
         List<Project> projects = this.integrateProjects(connect, user);
-        this.integrateIssues(connect, user, projects);
+//        this.integrateIssues(connect, user, projects);
         return projects;
     }
 

@@ -11,6 +11,7 @@ import ru.ima.model.jpa.UserProject;
 import ru.ima.repo.ProjectRepo;
 import ru.ima.repo.TasksRepo;
 import ru.ima.repo.UserProjectRepo;
+import ru.ima.service.GitHubIntegrationService;
 import ru.ima.service.GitlabIntegrationService;
 
 import java.util.List;
@@ -24,15 +25,17 @@ public class ProjectsController {
     private final UserProjectRepo userProjectRepo;
     private final TasksRepo tasksRepo;
     private final GitlabIntegrationService gitlabIntegrationService;
+    private final GitHubIntegrationService gitHubIntegrationService;
 
     public ProjectsController(
-            ProjectRepo projectRepo, UserProjectRepo userProjectRepo, TasksRepo tasksRepo, GitlabIntegrationService gitlabIntegrationService
+            ProjectRepo projectRepo, UserProjectRepo userProjectRepo, TasksRepo tasksRepo, GitlabIntegrationService gitlabIntegrationService, GitHubIntegrationService gitHubIntegrationService
     ){
 
         this.projectRepo = projectRepo;
         this.userProjectRepo = userProjectRepo;
         this.tasksRepo = tasksRepo;
         this.gitlabIntegrationService = gitlabIntegrationService;
+        this.gitHubIntegrationService = gitHubIntegrationService;
     }
 
     @PostMapping
@@ -49,6 +52,14 @@ public class ProjectsController {
         if(user.getGitlabToken() != null){
             try {
                 gitlabIntegrationService.createProject(user, project);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+
+        if(user.getGithubToken() != null){
+            try {
+                gitHubIntegrationService.createProject(user, project);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
