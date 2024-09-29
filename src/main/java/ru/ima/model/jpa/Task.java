@@ -25,4 +25,6 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Priority priority;
     private Date due;
+    private Integer gitlabId;
+    private String gitlabLink;
 }

@@ -19,4 +19,6 @@ public class Project {
     @OneToMany(mappedBy = "projectId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserProject> userProjects;
 
+    private Integer gitlabId;
+    private String gitlabLink;
 }
