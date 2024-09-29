@@ -116,7 +116,10 @@ public class GitlabIntegrationService {
 
     public void createProject(User user, Project project) throws IOException {
         GitlabAPI api = this.createApi(user);
-        GitlabProject glProject = api.createProject(project.getName());
+        GitlabProject glProject = new GitlabProject();
+        glProject.setName(project.getName());
+        glProject.setVisibility("public");
+        glProject = api.createProject(glProject);
         project.setGitlabId(glProject.getId());
         project.setGitlabLink(glProject.getWebUrl());
         projectRepo.save(project);
