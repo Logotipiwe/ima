@@ -56,8 +56,12 @@ public class UsersController {
             @RequestParam(value = "githubToken", required = false) String githubToken,
             @RequestParam(value = "gitlabToken", required = false) String gitlabToken
     ) {
-        user.setGitlabToken(Strings.isBlank(gitlabToken) ? null : gitlabToken);
-        user.setGithubToken(Strings.isBlank(githubToken) ? null : githubToken);
+        if(gitlabToken != null) {
+            user.setGitlabToken(Strings.isBlank(gitlabToken) ? null : gitlabToken);
+        }
+        if(githubToken != null) {
+            user.setGithubToken(Strings.isBlank(githubToken) ? null : githubToken);
+        }
         return ResponseEntity.ok(userRepo.save(user));
     }
 }
