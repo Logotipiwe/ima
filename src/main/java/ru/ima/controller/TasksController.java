@@ -39,9 +39,9 @@ public class TasksController {
             @AuthenticationPrincipal User user,
             @RequestBody Task task
     ) {
-        if(user.getGitlabToken() != null) {
+        if(user.getGitlabToken() != null && task.getName() != null) {
             try {
-                gitlabIntegrationService.updateTaskDataIfNeeded(task);
+                gitlabIntegrationService.createIssueIfNeeded(user, task);
             } catch (Exception e){
                 log.error(e.getMessage(), e);
             }

@@ -51,7 +51,7 @@ public class GitlabIntegrationService {
         List<Project> projectsToSave = new ArrayList<>();
         List<Project> exists = projectRepo.findMy(user.getId());
         for (GitlabProject ownedProject : ownedProjects) {
-            if(exists.stream().noneMatch(p->p.getGitlabId()!=null && p.getGitlabId().equals(ownedProject.getId()))) {
+            if (exists.stream().noneMatch(p -> p.getGitlabId() != null && p.getGitlabId().equals(ownedProject.getId()))) {
                 Project project = new Project();
                 project.setName(ownedProject.getNameWithNamespace());
                 project.setGitlabId(ownedProject.getId());
@@ -75,21 +75,21 @@ public class GitlabIntegrationService {
     private List<Task> integrateIssues(GitlabAPI connect, User user, List<Project> projects) throws IOException {
         List<Task> toSave = new ArrayList<>();
         for (Project project : projects) {
-            if(project.getGitlabId() != null) {
+            if (project.getGitlabId() != null) {
                 List<GitlabIssue> issues = connect.getIssues(project.getGitlabId());
                 for (GitlabIssue issue : issues) {
                     Task task = new Task();
                     task.setCreator(user.getId());
                     task.setProjectId(project.getId());
                     task.setName(issue.getTitle());
-                    if(issue.getDescription() != null) {
+                    if (issue.getDescription() != null) {
                         task.setDescription(issue.getDescription());
                     }
                     task.setGitlabId(issue.getId());
-                    if(project.getGitlabLink() != null) {
-                        task.setGitlabLink(project.getGitlabLink() + "/-/issues/"+issue.getIid());
+                    if (project.getGitlabLink() != null) {
+                        task.setGitlabLink(project.getGitlabLink() + "/-/issues/" + issue.getIid());
                     }
-                    if(issue.getState() != null && issue.getState().equals("opened")) {
+                    if (issue.getState() != null && issue.getState().equals("opened")) {
                         task.setStatus(TaskStatus.OPEN);
                     } else {
                         task.setStatus(TaskStatus.DONE);
@@ -101,7 +101,7 @@ public class GitlabIntegrationService {
         return tasksRepo.saveAll(toSave);
     }
 
-    public Task setIssueDataToTask(GitlabIssue issue, Task task) {
+    public void setIssueDataToTask(GitlabIssue issue, Task task) {
         task.setGitlabId(issue.getId());
         try {
             //приходится тащить через рефлексию, тк поле приватное
@@ -109,18 +109,9 @@ public class GitlabIntegrationService {
             field.setAccessible(true);
             String webUrl = (String) field.get(issue);
             task.setGitlabLink(webUrl);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-
-        return tasksRepo.save(task);
-    }
-
-    public Task createIssueFromTask(User user, Task task, Project project) throws IOException {
-        GitlabAPI api = this.createApi(user);
-        GitlabIssue issue = api.createIssue(project.getGitlabId(), api.getUser().getId(), null, null, null,
-                Strings.isBlank(task.getName()) ? "Без названия" : task.getName());
-        return this.setIssueDataToTask(issue, task);
     }
 
     public void createProject(User user, Project project) throws IOException {
@@ -131,7 +122,13 @@ public class GitlabIntegrationService {
         projectRepo.save(project);
     }
 
-    public void updateTaskDataIfNeeded(Task task) {
-
+    public void createIssueIfNeeded(User user, Task task) throws IOException {
+        GitlabAPI api = this.createApi(user);
+        Project project = projectRepo.getReferenceById(task.getProjectId());
+        if (project.getGitlabId() != null) {
+            GitlabIssue issue = api.createIssue(project.getGitlabId(), api.getUser().getId(), null, null,
+                    task.getDescription(), Strings.isBlank(task.getName()) ? "Без названия" : task.getName());
+            this.setIssueDataToTask(issue, task);
+        }
     }
 }
