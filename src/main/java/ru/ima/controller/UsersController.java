@@ -1,19 +1,13 @@
 package ru.ima.controller;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.ima.model.jpa.User;
 import ru.ima.repo.UserRepo;
 import ru.ima.service.AuthenticationService;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -47,5 +41,23 @@ public class UsersController {
             return ResponseEntity.ok().build(); // TODO редирект
         }
         throw new RuntimeException("No user with such code");
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity getMe(
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/tokens")
+    public ResponseEntity setTokens(
+            @AuthenticationPrincipal User user,
+            @RequestParam(value = "githubToken", required = false) String githubToken,
+            @RequestParam(value = "gitlabToken", required = false) String gitlabToken
+    ) {
+        user.setGitlabToken(Strings.isBlank(gitlabToken) ? null : gitlabToken);
+        user.setGithubToken(Strings.isBlank(githubToken) ? null : githubToken);
+        return ResponseEntity.ok(userRepo.save(user));
     }
 }

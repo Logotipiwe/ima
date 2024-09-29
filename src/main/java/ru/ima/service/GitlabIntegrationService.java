@@ -1,5 +1,7 @@
 package ru.ima.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.gitlab.api.GitlabAPI;
 import org.gitlab.api.models.GitlabIssue;
 import org.gitlab.api.models.GitlabProject;
@@ -15,8 +17,11 @@ import ru.ima.repo.TasksRepo;
 import ru.ima.repo.UserProjectRepo;
 
 import java.io.IOException;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
+@Slf4j
 @Service
 public class GitlabIntegrationService {
     private final ProjectRepo projectRepo;
@@ -30,11 +35,15 @@ public class GitlabIntegrationService {
     }
 
     @Transactional
-    public List<Project> integrateProjectsAndIssues(User user, String token) throws IOException {
-        GitlabAPI connect = GitlabAPI.connect("https://gitlab.com", token);
+    public List<Project> integrateProjectsAndIssues(User user) throws IOException {
+        GitlabAPI connect = this.createApi(user);
         List<Project> projects = this.integrateProjects(connect, user);
         this.integrateIssues(connect, user, projects);
         return projects;
+    }
+
+    private GitlabAPI createApi(User user) {
+        return GitlabAPI.connect("https://gitlab.com", user.getGitlabToken());
     }
 
     private List<Project> integrateProjects(GitlabAPI connect, User user) throws IOException {
@@ -90,5 +99,39 @@ public class GitlabIntegrationService {
             }
         }
         return tasksRepo.saveAll(toSave);
+    }
+
+    public Task setIssueDataToTask(GitlabIssue issue, Task task) {
+        task.setGitlabId(issue.getId());
+        try {
+            //приходится тащить через рефлексию, тк поле приватное
+            Field field = GitlabIssue.class.getDeclaredField("webUrl");
+            field.setAccessible(true);
+            String webUrl = (String) field.get(issue);
+            task.setGitlabLink(webUrl);
+        } catch (Exception e){
+            log.error(e.getMessage(), e);
+        }
+
+        return tasksRepo.save(task);
+    }
+
+    public Task createIssueFromTask(User user, Task task, Project project) throws IOException {
+        GitlabAPI api = this.createApi(user);
+        GitlabIssue issue = api.createIssue(project.getGitlabId(), api.getUser().getId(), null, null, null,
+                Strings.isBlank(task.getName()) ? "Без названия" : task.getName());
+        return this.setIssueDataToTask(issue, task);
+    }
+
+    public void createProject(User user, Project project) throws IOException {
+        GitlabAPI api = this.createApi(user);
+        GitlabProject glProject = api.createProject(project.getName());
+        project.setGitlabId(glProject.getId());
+        project.setGitlabLink(glProject.getWebUrl());
+        projectRepo.save(project);
+    }
+
+    public void updateTaskDataIfNeeded(Task task) {
+
     }
 }

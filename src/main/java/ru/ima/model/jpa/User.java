@@ -47,6 +47,9 @@ public class User implements UserDetails {
 
     private Boolean verified = false;
 
+    private String gitlabToken;
+    private String githubToken;
+
     public User(String fullName, String email, String password, UUID confirmationCode) {
         this.fullName = fullName;
         this.email = email;
@@ -58,11 +61,6 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
-
-//    @Override
-//    public String getPassword() {
-//        return password;
-//    }
 
     @Override
     public String getUsername() {

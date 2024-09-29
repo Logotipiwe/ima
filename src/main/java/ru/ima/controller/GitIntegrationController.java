@@ -1,37 +1,43 @@
 package ru.ima.controller;
 
-import org.gitlab.api.GitlabAPI;
-import org.gitlab.api.models.GitlabProject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ima.model.jpa.Project;
 import ru.ima.model.jpa.User;
-import ru.ima.model.jpa.UserProject;
-import ru.ima.repo.ProjectRepo;
-import ru.ima.repo.UserProjectRepo;
+import ru.ima.service.GitHubIntegrationService;
 import ru.ima.service.GitlabIntegrationService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/ima/api/git")
 public class GitIntegrationController {
     private final GitlabIntegrationService gitlabIntegrationService;
+    private final GitHubIntegrationService gitHubIntegrationService;
 
-    public GitIntegrationController(GitlabIntegrationService gitlabIntegrationService) {
+    public GitIntegrationController(GitlabIntegrationService gitlabIntegrationService, GitHubIntegrationService gitHubIntegrationService) {
         this.gitlabIntegrationService = gitlabIntegrationService;
+        this.gitHubIntegrationService = gitHubIntegrationService;
     }
 
     @RequestMapping("/gitlab")
     public ResponseEntity integrateProjects(
-            @AuthenticationPrincipal User user,
-            @RequestParam("token") String token
+            @AuthenticationPrincipal User user
     ) throws IOException {
-        return ResponseEntity.ok(gitlabIntegrationService.integrateProjectsAndIssues(user, token));
+        if(user.getGitlabToken() == null) {
+            throw new RuntimeException("gitlab token is null");
+        }
+        return ResponseEntity.ok(gitlabIntegrationService.integrateProjectsAndIssues(user));
+    }
+
+    @RequestMapping("/github")
+    public ResponseEntity integrateGHProjects(
+            @AuthenticationPrincipal User user
+    ) throws IOException {
+        if(user.getGithubToken() == null) {
+            throw new RuntimeException("github token is null");
+        }
+        return ResponseEntity.ok(/*gitHubIntegrationService.integrateProjects(user)*/).build();
     }
 }
