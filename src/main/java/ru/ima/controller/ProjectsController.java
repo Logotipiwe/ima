@@ -47,7 +47,6 @@ public class ProjectsController {
         UserProject userProject = new UserProject();
         userProject.setProjectId(project.getId());
         userProject.setUserId(user.getId());
-        userProjectRepo.save(userProject);
 
         if(user.getGitlabToken() != null){
             try {
@@ -64,6 +63,8 @@ public class ProjectsController {
                 log.error(e.getMessage(), e);
             }
         }
+
+        userProjectRepo.save(userProject);
 
         return ResponseEntity.ok().body(project);
     }
