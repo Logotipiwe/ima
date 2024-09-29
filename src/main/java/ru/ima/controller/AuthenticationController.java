@@ -14,7 +14,7 @@ import ru.ima.model.dto.LoginUserDto;
 import ru.ima.model.dto.RegisterUserDto;
 import ru.ima.service.AuthenticationService;
 import ru.ima.service.JwtService;
-import ru.ima.service.MailService;
+import ru.ima.service.mail.MailService;
 
 @Slf4j
 @RequestMapping("/ima/auth")

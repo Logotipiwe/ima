@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: ima
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    password: 1234
+    username: postgres
+    hikari:
+      schema: ima
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    clean-disabled: false
+    validate-on-migrate: false
+
+security:
+  jwt:
+    secret-key: 3cfa76efd4937c1b0ea519f8fc057a80fed04a7426f8e8bcd0a7567g272e007b
+    expiration-time: 3600000
+ima:
+  mail-verification: false
+
+springdoc:
+  api-docs:
+    path: /ima/v3/api-docs/swagger-config
+  swagger-ui:
+    path: /ima/swagger-ui
+    disable-swagger-default-url: true

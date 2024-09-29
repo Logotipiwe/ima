@@ -1,8 +1,9 @@
-package ru.ima.service;
+package ru.ima.service.mail;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -10,23 +11,25 @@ import ru.ima.model.jpa.User;
 
 import java.io.UnsupportedEncodingException;
 
+@Profile("!test")
 @Service
-public class MailService {
+public class IcmpMailService implements MailService {
     private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
 
-    public MailService(JavaMailSender mailSender) {
+    public IcmpMailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
+    @Override
     public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
         String fromAddress = fromEmail;
         String senderName = "Сервис IMA";
         String subject = "Регистрация в IMA - подтвердите аккаунт";
-        String content = "Уважаемый "+user.getFullName()+",<br>"
+        String content = "Уважаемый " + user.getFullName() + ",<br>"
                 + "Пожалуйста, пройдите по ссылке ниже для подтверждения аккаунта:<br>"
                 + "<h3><a href=\"URL\" target=\"_self\">URL</a></h3>"
                 + "Спасибо,<br>"
@@ -47,6 +50,5 @@ public class MailService {
         helper.setText(content, true);
 
         mailSender.send(message);
-
     }
 }
